@@ -10,21 +10,21 @@
       font-family: 'Fredoka One', cursive, Arial, sans-serif;
       background: linear-gradient(135deg, #ffb347, #ffcc33);
       margin: 0;
-      padding: 40px 20px;
+      padding: 30px 20px;
       color: #333;
       text-align: center;
     }
 
     h1 {
-      font-size: 3em;
+      font-size: 2.8em;
       color: #fff;
       text-shadow: 2px 2px 4px #b35900;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
 
     p {
-      font-size: 1.2em;
-      margin-bottom: 30px;
+      font-size: 1.1em;
+      margin-bottom: 20px;
       color: #fff;
       text-shadow: 1px 1px 2px #b35900;
     }
@@ -32,37 +32,94 @@
     .container {
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     iframe {
       width: 100%;
       max-width: 650px;
-      height: 800px;
+      height: 750px;
       border: none;
       border-radius: 15px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.25);
       background: #fff;
     }
 
+    .info-box {
+      background: #fff;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      border-radius: 15px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      color: #333;
+      text-align: left;
+    }
+
+    .info-box h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      color: #d35400;
+    }
+
+    .info-box p {
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .numbers {
+      margin-top: 20px;
+      font-size: 1em;
+      font-weight: bold;
+    }
+
     footer {
-      margin-top: 30px;
+      margin-top: 40px;
       font-size: 0.9em;
       color: #fff;
       text-shadow: 1px 1px 2px #b35900;
     }
   </style>
+  <script>
+    async function cargarNumeros() {
+      const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQPvBg79Y7PZUUf_3hwzVUYMq2nMxgNGaJ-bRkYz8zk7umgMcwULv5cRZ-pm3zgo3SydztUsU4hJ_G4/pub?output=csv';
+      const respuesta = await fetch(url);
+      const texto = await respuesta.text();
+      const lineas = texto.split('\n').slice(1); // omitir encabezado
+      const reservados = lineas.map(l => l.split(',')[0].trim()).filter(n => n !== '');
+      const total = 90;
+      const disponibles = total - reservados.length;
+      document.getElementById('disponibles').textContent = disponibles;
+      document.getElementById('reservados').innerHTML = reservados.join(', ');
+    }
+
+    window.onload = cargarNumeros;
+  </script>
 </head>
 <body>
   <h1>Reserva tu Número de Bingo</h1>
   <p>Ingresa tu nombre, elige un número disponible y coloca tu Yape.</p>
+
+  <div class="info-box">
+    <h2>Información de pago</h2>
+    <p><strong>Yape:</strong> 990776532</p>
+    <p><strong>Monto:</strong> S/ 8.00 por número</p>
+    <p><strong>WhatsApp:</strong> 942540767</p>
+  </div>
+
   <div class="container">
     <iframe
       src="https://docs.google.com/forms/d/e/1FAIpQLSdlvXOTW1J0XQPNiVxks28Ju1zZH8yv69iu_LM54gABoHQV6g/viewform?embedded=true"
-      frameborder="0"
-      marginheight="0"
-      marginwidth="0"
     >Cargando…</iframe>
   </div>
+
+  <div class="info-box">
+    <h2>Números reservados</h2>
+    <p><strong>Disponibles:</strong> <span id="disponibles">...</span></p>
+    <p><strong>Reservados:</strong></p>
+    <p id="reservados">Cargando...</p>
+  </div>
+
   <footer>
     &copy; 2025 Bingo Sullana - Todos los derechos reservados
   </footer>
